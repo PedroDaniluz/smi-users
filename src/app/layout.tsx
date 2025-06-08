@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
 import "./globals.css";
+import { ReactQueryProvider } from "@/providers/react-query";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
-})
+});
 
 export const metadata: Metadata = {
-  title: "SMi Users"
+  title: "SMi Users",
 };
 
 export default function RootLayout({
@@ -18,7 +19,7 @@ export default function RootLayout({
   return (
     <html lang="pt-br">
       <body className={montserrat.className}>
-        {children}
+        <ReactQueryProvider>{children}</ReactQueryProvider>
       </body>
     </html>
   );
