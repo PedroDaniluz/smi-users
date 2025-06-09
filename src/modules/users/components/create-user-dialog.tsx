@@ -21,7 +21,7 @@ export function CreateUserDialog() {
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     const data = new FormData(event.currentTarget);
     const name = data.get("name") as string;
-    const email = data.get("mail") as string;
+    const email = data.get("email") as string;
     const password = data.get("password") as string;
     createUserMutation.mutate({
       nome: name,
@@ -57,8 +57,8 @@ export function CreateUserDialog() {
             <Label htmlFor="mail">Email</Label>
             <Input
               type="email"
-              id="mail"
-              name="mail"
+              id="email"
+              name="email"
               placeholder="email@email.com"
             />
           </div>

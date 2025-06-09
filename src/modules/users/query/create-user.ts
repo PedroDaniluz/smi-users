@@ -1,16 +1,11 @@
 import { useMutation } from "@tanstack/react-query";
 import { useApi } from "@/lib/api";
-
-interface UserPayload {
-  nome: string;
-  email: string;
-  senha: string;
-}
+import { TUserCreate } from "../types";
 
 export function useCreateUser() {
   const api = useApi();
 
-  async function createUser(payload: UserPayload) {
+  async function createUser(payload: TUserCreate) {
     const response = await api.post("/usuarios", payload);
     return response.data;
   }

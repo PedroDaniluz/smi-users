@@ -4,3 +4,9 @@ export type TUser = {
   email: string;
   senha: string;
 };
+
+export type TUserCreate = {
+  nome: string;
+  email: string;
+  senha: string;
+};
