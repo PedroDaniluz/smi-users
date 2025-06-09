@@ -7,14 +7,15 @@ interface UserPayload {
   senha: string;
 }
 
-async function createUser(payload: UserPayload) {
-  const api = useApi();
-  const response = await api.post("/usuarios", payload);
-  return response.data;
-}
-
 export function useCreateUser() {
+  const api = useApi();
+
+  async function createUser(payload: UserPayload) {
+    const response = await api.post("/usuarios", payload);
+    return response.data;
+  }
+
   return useMutation({
-    mutationFn: (payload: UserPayload) => createUser(payload),
+    mutationFn: createUser,
   });
 }
