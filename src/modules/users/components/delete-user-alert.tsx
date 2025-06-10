@@ -19,7 +19,7 @@ interface DeleteUserAlertProps {
   deleteUser: (id: string) => void;
 }
 
-export default function DeleteUserAlert({
+export function DeleteUserAlert({
   open,
   userName,
   userId,

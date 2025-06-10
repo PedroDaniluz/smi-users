@@ -1,5 +1,4 @@
 "use client";
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -9,57 +8,60 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { CirclePlus } from "lucide-react";
-import { TUserCreate } from "../types";
+import { TUser } from "../types";
 
-export function CreateUserDialog({
-  createUser,
-}: {
-  createUser: (user: TUserCreate) => void;
-}) {
+interface UpdateUserDialogProps {
+  user: TUser;
+  open: boolean;
+  setOpen: (open: boolean) => void;
+  updateUser: (user: TUser) => void;
+}
+
+export function UpdateUserDialog({
+  user,
+  open,
+  setOpen,
+  updateUser,
+}: UpdateUserDialogProps) {
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const name = data.get("name") as string;
     const email = data.get("email") as string;
     const password = data.get("password") as string;
-    const user: TUserCreate = {
+    const updatedUser = {
+      id: user.id,
       nome: name,
       email: email,
       senha: password,
     };
-    createUser(user);
+    updateUser(updatedUser);
     setOpen(false);
   }
 
-  const [open, setOpen] = useState(false);
-
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button variant="default" className="w-full p-6">
-          <CirclePlus className="mr-2 h-5 w-5" strokeWidth={3} />
-          Adicionar usuário
-        </Button>
-      </DialogTrigger>
+    <Dialog open={open}>
       <DialogContent className="lg:max-w-[850px]">
         <DialogHeader>
-          <DialogTitle>Adicionar Usuário</DialogTitle>
+          <DialogTitle>Alterar Usuário</DialogTitle>
           <DialogDescription>
-            Crie um novo usuário com nome email e senha. O usuário será
-            adicionado ao sistema e poderá acessar as funcionalidades
-            disponíveis.
+            Altere os detalhes do usuário abaixo.
           </DialogDescription>
         </DialogHeader>
 
         <form className="grid gap-4" onSubmit={handleSubmit}>
           <div className="grid gap-3">
             <Label htmlFor="name">Nome</Label>
-            <Input type="text" id="name" name="name" placeholder="João Silva" />
+            <Input
+              type="text"
+              id="name"
+              name="name"
+              placeholder="João Silva"
+              defaultValue={user.nome}
+            />
           </div>
           <div className="grid gap-3">
             <Label htmlFor="mail">Email</Label>
@@ -67,7 +69,7 @@ export function CreateUserDialog({
               type="email"
               id="email"
               name="email"
-              placeholder="email@email.com"
+              defaultValue={user.email}
             />
           </div>
           <div className="grid gap-3">
@@ -76,7 +78,7 @@ export function CreateUserDialog({
               type="password"
               id="password"
               name="password"
-              placeholder="*********"
+              defaultValue={user.senha}
             />
           </div>
 
@@ -84,7 +86,7 @@ export function CreateUserDialog({
             <DialogClose asChild>
               <Button variant="outline">Cancelar</Button>
             </DialogClose>
-            <Button type="submit">Criar usuário</Button>
+            <Button type="submit">Salvar modificações</Button>
           </DialogFooter>
         </form>
       </DialogContent>

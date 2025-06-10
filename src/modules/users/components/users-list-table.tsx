@@ -31,15 +31,25 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-import { ArrowUpDown, ChevronDown, Delete, MoreHorizontal } from "lucide-react";
+import {
+  ArrowUpDown,
+  ChevronDown,
+  Delete,
+  Edit,
+  MoreHorizontal,
+} from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { TUser } from "../types";
-import DeleteUserAlert from "./delete-user-dialog";
+import { DeleteUserAlert } from "./delete-user-alert";
+import { UpdateUserDialog } from "./update-user-dialog";
 
-function getColumns(deleteUser: (id: string) => void): ColumnDef<TUser>[] {
+function getColumns(
+  deleteUser: (id: string) => void,
+  updatedUser: (user: TUser) => void
+): ColumnDef<TUser>[] {
   return [
     {
       id: "id",
@@ -98,7 +108,8 @@ function getColumns(deleteUser: (id: string) => void): ColumnDef<TUser>[] {
       id: "actions",
       enableHiding: false,
       cell: ({ row }) => {
-        const [open, setOpen] = React.useState(false);
+        const [openDelete, setOpenDelete] = React.useState(false);
+        const [openEdit, setOpenEdit] = React.useState(false);
         const user = row.original;
 
         return (
@@ -118,15 +129,23 @@ function getColumns(deleteUser: (id: string) => void): ColumnDef<TUser>[] {
                   Copiar email
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>Editar usuário</DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setOpen(true)}>
+                <DropdownMenuItem onClick={() => setOpenEdit(true)}>
+                  Editar usuário
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setOpenDelete(true)}>
                   Excluir usuário
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
+            <UpdateUserDialog
+              open={openEdit}
+              user={user}
+              setOpen={setOpenEdit}
+              updateUser={updatedUser}
+            />
             <DeleteUserAlert
-              open={open}
-              setOpen={setOpen}
+              open={openDelete}
+              setOpen={setOpenDelete}
               userName={user.nome}
               userId={user.id}
               deleteUser={deleteUser}
@@ -142,14 +161,16 @@ interface UserDataTableProps {
   data: TUser[];
   loading?: boolean;
   onDeleteUser: (id: string) => void;
+  updateUser: (user: TUser) => void;
 }
 
 export function UserDataTable({
   data,
   loading,
   onDeleteUser,
+  updateUser,
 }: UserDataTableProps) {
-  const columns = getColumns(onDeleteUser);
+  const columns = getColumns(onDeleteUser, updateUser);
 
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -216,14 +237,14 @@ export function UserDataTable({
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <div className="rounded-lg border border-smiOrange">
+      <div className="rounded-lg border">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id}>
+                    <TableHead key={header.id} className="text-smiOrange">
                       {header.isPlaceholder
                         ? null
                         : flexRender(
