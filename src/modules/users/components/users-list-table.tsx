@@ -100,9 +100,7 @@ function getColumns(
     {
       accessorKey: "senha",
       header: "Senha",
-      cell: ({ row }) => (
-        <div className="capitalize">{row.getValue("senha")}</div>
-      ),
+      cell: ({ row }) => <div>{row.getValue("senha")}</div>,
     },
     {
       id: "actions",

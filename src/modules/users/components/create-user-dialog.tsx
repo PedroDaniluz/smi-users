@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { CirclePlus } from "lucide-react";
 import { TUserCreate } from "../types";
+import { Eye, EyeOff } from "lucide-react";
 
 export function CreateUserDialog({
   createUser,
@@ -37,6 +38,7 @@ export function CreateUserDialog({
   }
 
   const [open, setOpen] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -72,12 +74,23 @@ export function CreateUserDialog({
           </div>
           <div className="grid gap-3">
             <Label htmlFor="password">Senha</Label>
-            <Input
-              type="password"
-              id="password"
-              name="password"
-              placeholder="*********"
-            />
+            <div className="relative">
+              <Input
+                type={showPassword ? "text" : "password"}
+                id="password"
+                name="password"
+                placeholder="*********"
+              />
+              <button
+                className="absolute right-2 top-1/2 -translate-y-1/2 bg-transparent border-none p-0 cursor-pointer"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setShowPassword((v) => !v);
+                }}
+              >
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
+            </div>
           </div>
 
           <DialogFooter>

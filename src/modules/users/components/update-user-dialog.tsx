@@ -1,5 +1,5 @@
 "use client";
-import { Button } from "@/components/ui/button";
+import { useState } from "react";
 import {
   Dialog,
   DialogClose,
@@ -9,9 +9,11 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { TUser } from "../types";
+import { Eye, EyeOff } from "lucide-react";
 
 interface UpdateUserDialogProps {
   user: TUser;
@@ -42,8 +44,10 @@ export function UpdateUserDialog({
     setOpen(false);
   }
 
+  const [showPassword, setShowPassword] = useState(false);
+
   return (
-    <Dialog open={open}>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="lg:max-w-[850px]">
         <DialogHeader>
           <DialogTitle>Alterar Usuário</DialogTitle>
@@ -74,12 +78,24 @@ export function UpdateUserDialog({
           </div>
           <div className="grid gap-3">
             <Label htmlFor="password">Senha</Label>
-            <Input
-              type="password"
-              id="password"
-              name="password"
-              defaultValue={user.senha}
-            />
+            <div className="relative">
+              <Input
+                type={showPassword ? "text" : "password"}
+                id="password"
+                name="password"
+                placeholder="*********"
+                defaultValue={user.senha}
+              />
+              <button
+                className="absolute right-2 top-1/2 -translate-y-1/2 bg-transparent border-none p-0 cursor-pointer"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setShowPassword((v) => !v);
+                }}
+              >
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
+            </div>
           </div>
 
           <DialogFooter>
